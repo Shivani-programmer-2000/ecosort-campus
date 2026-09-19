@@ -1,0 +1,438 @@
+{
+  "version": "1.0",
+  "note": "Definitions paraphrase the SWM Rules, 2026 summary (PIB). Item guidance is a SAMPLE campus guide: edit or replace it with your own campus rules.",
+  "ambiguous": [
+    "tissue",
+    "napkin",
+    "face mask",
+    "mask",
+    "pizza box",
+    "paper cup",
+    "greasy",
+    "oily",
+    "soiled"
+  ],
+  "chunks": [
+    {
+      "id": "rule-wet",
+      "stream": "Wet",
+      "title": "Wet waste (definition)",
+      "keywords": [
+        "wet waste",
+        "kitchen waste",
+        "food waste",
+        "vegetable",
+        "fruit",
+        "peel",
+        "meat",
+        "flower",
+        "biodegradable",
+        "organic"
+      ],
+      "why": "Wet waste is biodegradable kitchen and garden waste such as food scraps, fruit and vegetable peels, meat and flowers.",
+      "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.",
+      "source": "SWM Rules, 2026 (MoEFCC)"
+    },
+    {
+      "id": "rule-dry",
+      "stream": "Dry",
+      "title": "Dry waste (definition)",
+      "keywords": [
+        "dry waste",
+        "plastic",
+        "paper",
+        "metal",
+        "glass",
+        "wood",
+        "rubber",
+        "recyclable",
+        "multilayer packaging"
+      ],
+      "why": "Dry waste covers recyclable materials such as plastic, paper, metal, glass, wood and rubber.",
+      "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.",
+      "source": "SWM Rules, 2026 (MoEFCC)"
+    },
+    {
+      "id": "rule-sanitary",
+      "stream": "Sanitary",
+      "title": "Sanitary waste (definition)",
+      "keywords": [
+        "sanitary waste",
+        "diaper",
+        "sanitary pad",
+        "sanitary towel",
+        "tampon",
+        "condom",
+        "hygiene"
+      ],
+      "why": "Sanitary waste is used personal-hygiene items such as diapers, sanitary pads, tampons and condoms.",
+      "dispose": "Wrap it securely and store it separately from other waste.",
+      "source": "SWM Rules, 2026 (MoEFCC)"
+    },
+    {
+      "id": "rule-special",
+      "stream": "Special care",
+      "title": "Special care waste (definition)",
+      "keywords": [
+        "special care",
+        "hazardous",
+        "bulb",
+        "battery",
+        "medicine",
+        "paint",
+        "thermometer",
+        "mercury"
+      ],
+      "why": "Special care waste is household hazardous waste such as paint cans, bulbs, mercury thermometers, batteries and expired medicines.",
+      "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.",
+      "source": "SWM Rules, 2026 (MoEFCC)"
+    },
+    {
+      "id": "wet-tea",
+      "stream": "Wet",
+      "title": "Tea bags, tea leaves and coffee grounds",
+      "keywords": [
+        "tea bag",
+        "tea leaves",
+        "tea",
+        "coffee grounds",
+        "coffee"
+      ],
+      "why": "Tea and coffee residue is organic kitchen waste.",
+      "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "wet-food",
+      "stream": "Wet",
+      "title": "Leftover cooked food",
+      "keywords": [
+        "leftover food",
+        "rice",
+        "curry",
+        "roti",
+        "chapati",
+        "dal",
+        "meal",
+        "canteen food",
+        "cooked food"
+      ],
+      "why": "Cooked and leftover food is organic kitchen waste.",
+      "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "wet-peel",
+      "stream": "Wet",
+      "title": "Fruit and vegetable peels",
+      "keywords": [
+        "banana peel",
+        "fruit peel",
+        "vegetable peel",
+        "orange peel",
+        "potato peel",
+        "apple core",
+        "banana",
+        "mango",
+        "vegetable",
+        "fruit"
+      ],
+      "why": "Fruit and vegetable peels are organic kitchen waste.",
+      "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "wet-egg",
+      "stream": "Wet",
+      "title": "Egg shells and meat scraps",
+      "keywords": [
+        "egg shell",
+        "eggshell",
+        "chicken bones",
+        "meat",
+        "fish",
+        "bones"
+      ],
+      "why": "Egg shells and meat scraps are organic kitchen waste.",
+      "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "wet-flower",
+      "stream": "Wet",
+      "title": "Flowers and garlands",
+      "keywords": [
+        "flower",
+        "garland",
+        "puja flowers",
+        "petals"
+      ],
+      "why": "Flowers and garlands are organic waste.",
+      "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "dry-bottle",
+      "stream": "Dry",
+      "title": "Plastic bottles",
+      "keywords": [
+        "plastic bottle",
+        "water bottle",
+        "cold drink bottle",
+        "pet bottle",
+        "bottle"
+      ],
+      "why": "Plastic is a dry recyclable material.",
+      "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "dry-wrapper",
+      "stream": "Dry",
+      "title": "Plastic wrappers and bags",
+      "keywords": [
+        "wrapper",
+        "chips packet",
+        "biscuit wrapper",
+        "carry bag",
+        "plastic bag",
+        "polythene",
+        "plastic cover",
+        "packet"
+      ],
+      "why": "Plastic wrappers and bags are dry waste.",
+      "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "dry-paper",
+      "stream": "Dry",
+      "title": "Paper and notebooks",
+      "keywords": [
+        "paper",
+        "newspaper",
+        "notebook",
+        "printout",
+        "magazine",
+        "book",
+        "exam sheets"
+      ],
+      "why": "Paper is a dry recyclable material.",
+      "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "dry-cardboard",
+      "stream": "Dry",
+      "title": "Cardboard boxes",
+      "keywords": [
+        "cardboard",
+        "carton",
+        "box",
+        "delivery box",
+        "parcel box"
+      ],
+      "why": "Cardboard is paper-based and counts as dry waste.",
+      "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "dry-glass",
+      "stream": "Dry",
+      "title": "Glass bottles and jars",
+      "keywords": [
+        "glass bottle",
+        "glass",
+        "jar",
+        "broken glass bottle"
+      ],
+      "why": "Glass is a dry recyclable material.",
+      "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "dry-metal",
+      "stream": "Dry",
+      "title": "Metal cans, tins and foil",
+      "keywords": [
+        "metal can",
+        "tin can",
+        "tin",
+        "soft drink can",
+        "aluminium foil",
+        "foil",
+        "steel",
+        "spoon"
+      ],
+      "why": "Metal is a dry recyclable material.",
+      "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "dry-multilayer",
+      "stream": "Dry",
+      "title": "Juice cartons and multilayer packaging",
+      "keywords": [
+        "tetra pack",
+        "juice box",
+        "juice carton",
+        "multilayer packaging",
+        "milk carton"
+      ],
+      "why": "Multilayer packaging is listed under dry waste.",
+      "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "dry-disposable",
+      "stream": "Dry",
+      "title": "Disposable plates, cups and cutlery",
+      "keywords": [
+        "disposable plate",
+        "plastic spoon",
+        "plastic cup",
+        "straw",
+        "disposable cutlery",
+        "thermocol"
+      ],
+      "why": "Disposable plastic items are dry waste.",
+      "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "dry-cloth",
+      "stream": "Dry",
+      "title": "Old clothes, rubber and wood",
+      "keywords": [
+        "cloth",
+        "clothes",
+        "towel",
+        "slipper",
+        "rubber",
+        "wooden stick",
+        "ice cream stick",
+        "pencil",
+        "wood"
+      ],
+      "why": "Rubber and wood are listed under dry waste, and textiles are dry, non-organic waste.",
+      "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "san-pad",
+      "stream": "Sanitary",
+      "title": "Sanitary pads and tampons",
+      "keywords": [
+        "sanitary pad",
+        "sanitary napkin",
+        "sanitary towel",
+        "tampon",
+        "period product",
+        "menstrual pad"
+      ],
+      "why": "Sanitary pads and tampons are sanitary waste.",
+      "dispose": "Wrap it securely and store it separately from other waste.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "san-diaper",
+      "stream": "Sanitary",
+      "title": "Diapers",
+      "keywords": [
+        "diaper",
+        "baby diaper",
+        "adult diaper"
+      ],
+      "why": "Diapers are sanitary waste.",
+      "dispose": "Wrap it securely and store it separately from other waste.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "san-condom",
+      "stream": "Sanitary",
+      "title": "Condoms",
+      "keywords": [
+        "condom",
+        "contraceptive"
+      ],
+      "why": "Condoms are sanitary waste.",
+      "dispose": "Wrap it securely and store it separately from other waste.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "spc-bulb",
+      "stream": "Special care",
+      "title": "Tube lights, CFLs and bulbs",
+      "keywords": [
+        "tube light",
+        "tubelight",
+        "cfl",
+        "bulb",
+        "led bulb",
+        "lamp",
+        "fluorescent"
+      ],
+      "why": "Bulbs and tube lights are special care (household hazardous) waste.",
+      "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "spc-battery",
+      "stream": "Special care",
+      "title": "Batteries",
+      "keywords": [
+        "battery",
+        "batteries",
+        "aa battery"
+      ],
+      "why": "Batteries are special care (household hazardous) waste.",
+      "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "spc-medicine",
+      "stream": "Special care",
+      "title": "Expired medicines",
+      "keywords": [
+        "expired medicine",
+        "medicine",
+        "tablet",
+        "tablets",
+        "syrup",
+        "strip",
+        "drugs"
+      ],
+      "why": "Expired medicines are special care (household hazardous) waste.",
+      "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "spc-paint",
+      "stream": "Special care",
+      "title": "Paint cans and tins",
+      "keywords": [
+        "paint",
+        "paint can",
+        "paint tin",
+        "varnish",
+        "thinner"
+      ],
+      "why": "Paint cans are special care (household hazardous) waste.",
+      "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    },
+    {
+      "id": "spc-thermo",
+      "stream": "Special care",
+      "title": "Mercury thermometers",
+      "keywords": [
+        "thermometer",
+        "mercury thermometer",
+        "mercury"
+      ],
+      "why": "Mercury thermometers are special care (household hazardous) waste.",
+      "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.",
+      "source": "Campus bin guide (sample - edit for your campus)"
+    }
+  ]
+}

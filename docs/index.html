@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EcoSort Campus: which bin does it go in?</title>
+<meta name="description" content="Type any item and EcoSort tells you which of India's four waste streams it belongs to, with the reason and the source. Built for the 1M1B x IBM SkillsBuild AI for Sustainability internship.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%99%BB%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #F1F5F0;
+  --surface: #FFFFFF;
+  --wash: #E3EBE5;
+  --ink: #14211A;
+  --muted: #4F5F56;
+  --line: #CBD6CE;
+  --brand: #0F4C3A;
+  --brand-ink: #FFFFFF;
+  --wet: #1C7F4B;
+  --dry: #2A66BD;
+  --sanitary: #B05A0C;
+  --special: #8A4286;
+  --none: #56655D;
+  --on-stream: #FFFFFF;
+  --focus: #1F6FEB;
+  --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1510; --surface: #122019; --wash: #16291F; --ink: #E8F0EA; --muted: #A2B4A9;
+    --line: #27392F; --brand: #5FC79A; --brand-ink: #08140E;
+    --wet: #4CC083; --dry: #7DAEF2; --sanitary: #F0A04E; --special: #CF93CA; --none: #9DB0A5;
+    --on-stream: #08140E; --focus: #7DB1FF;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1510; --surface: #122019; --wash: #16291F; --ink: #E8F0EA; --muted: #A2B4A9;
+  --line: #27392F; --brand: #5FC79A; --brand-ink: #08140E;
+  --wet: #4CC083; --dry: #7DAEF2; --sanitary: #F0A04E; --special: #CF93CA; --none: #9DB0A5;
+  --on-stream: #08140E; --focus: #7DB1FF;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 1.0625rem; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+p { margin: 0 0 1em; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--brand); color: var(--brand-ink); padding: .6rem 1rem; z-index: 10; }
+.skip:focus { left: 0; }
+.wrap { width: min(1080px, 100% - 2.5rem); margin-inline: auto; }
+
+/* Header */
+.site-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 0; flex-wrap: wrap; }
+.brand { font-family: var(--display); font-weight: 800; font-size: 1.25rem; text-decoration: none; letter-spacing: -0.02em; }
+.site-nav { display: flex; align-items: center; gap: 1.4rem; flex-wrap: wrap; font-size: .95rem; }
+.site-nav a { text-decoration: none; color: var(--muted); }
+.site-nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+.theme-btn { font: inherit; font-size: .9rem; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: .3rem .9rem; cursor: pointer; }
+.theme-btn:hover { background: var(--wash); }
+
+/* Hero */
+.hero { padding: 2.5rem 0 4rem; }
+.hero-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: start; }
+@media (min-width: 960px) { .hero-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 4rem; } }
+.hero h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); font-weight: 800; max-width: 12ch; }
+.lede { font-size: 1.2rem; color: var(--muted); max-width: 46ch; margin: 1.2rem 0 1.8rem; }
+.ask { display: flex; gap: .6rem; flex-wrap: wrap; max-width: 640px; }
+.ask input {
+  flex: 1 1 260px; font: inherit; font-size: 1.1rem; color: var(--ink);
+  background: var(--surface); border: 2px solid var(--line); border-radius: 12px; padding: .85rem 1rem;
+}
+.ask input:focus { border-color: var(--brand); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 35%, transparent); }
+.btn { font: inherit; font-weight: 600; font-size: 1.05rem; color: var(--brand-ink); background: var(--brand); border: 0; border-radius: 12px; padding: .85rem 1.6rem; cursor: pointer; }
+.btn:hover { filter: brightness(1.08); }
+.examples { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: 1rem; font-size: .95rem; color: var(--muted); }
+.chip { font: inherit; font-size: .95rem; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: .25rem .85rem; cursor: pointer; }
+.chip:hover { background: var(--wash); }
+
+/* Bins: the memorable thing */
+.bins { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(.4rem, 2vw, 1rem); margin: 0 0 1.4rem; }
+.bin { text-align: center; }
+.bin svg { width: 100%; max-width: 150px; height: auto; overflow: visible; }
+.bin .body { fill: var(--c); fill-opacity: .16; stroke: var(--c); stroke-width: 3; stroke-linejoin: round; transition: fill-opacity .25s; }
+.bin .slat { stroke: var(--c); stroke-opacity: .5; stroke-width: 3; stroke-linecap: round; }
+.bin .lid { fill: var(--c); transform-origin: 16px 36px; transition: transform .35s cubic-bezier(.3,1.4,.5,1); }
+.bin.is-open .lid { transform: rotate(-32deg); }
+.bin.is-open .body { fill-opacity: .55; }
+.bin .drop { fill: var(--ink); opacity: 0; }
+.bin.is-open .drop { animation: drop .5s ease-out .1s both; }
+@keyframes drop { 0% { opacity: 1; transform: translateY(-46px); } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(8px); } }
+.bin-name { font-family: var(--display); font-weight: 800; font-size: clamp(.72rem, 2.5vw, 1.05rem); white-space: nowrap; color: var(--c); margin-top: .3rem; }
+.bin.is-open .bin-name { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 5px; }
+[data-s="Wet"] { --c: var(--wet); } [data-s="Dry"] { --c: var(--dry); }
+[data-s="Sanitary"] { --c: var(--sanitary); } [data-s="Special care"] { --c: var(--special); }
+
+/* Answer */
+.answer { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1.4rem 1.5rem; min-height: 9rem; }
+.answer.empty { color: var(--muted); display: flex; align-items: center; background: transparent; border-style: dashed; }
+.answer .echo { color: var(--muted); font-size: .95rem; margin-bottom: .5rem; }
+.badge { display: inline-block; font-family: var(--display); font-weight: 800; font-size: 1.5rem; letter-spacing: -0.01em; color: var(--on-stream); background: var(--c, var(--none)); border-radius: 10px; padding: .1rem .8rem; margin: 0 0 1rem; }
+.answer dl { margin: 0; display: grid; grid-template-columns: 8.5rem 1fr; gap: .5rem 1rem; }
+.answer dt { color: var(--muted); font-weight: 500; }
+.answer dd { margin: 0; }
+.answer details { margin-top: 1.1rem; color: var(--muted); font-size: .95rem; }
+.answer summary { cursor: pointer; }
+.answer ul { margin: .6rem 0 0; padding-left: 1.2rem; }
+.fb { margin-top: 1.1rem; display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; font-size: .95rem; color: var(--muted); }
+.fb button { font: inherit; font-size: .95rem; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: .3rem .8rem; cursor: pointer; }
+.fb button:hover { background: var(--wash); }
+.fine { font-size: .9rem; color: var(--muted); margin-top: 1.4rem; max-width: 46ch; }
+
+/* Sections */
+.band { padding: 4.5rem 0; border-top: 1px solid var(--line); }
+.band h2 { font-size: clamp(1.9rem, 4.5vw, 3rem); font-weight: 800; max-width: 20ch; margin-bottom: 1rem; }
+.band .intro { color: var(--muted); max-width: 58ch; margin-bottom: 2.4rem; }
+
+.streams { border-top: 1px solid var(--line); }
+.stream-row { display: grid; grid-template-columns: 13rem 1fr 1fr; gap: 1rem 2rem; padding: 1.4rem 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.stream-row h3 { font-size: 1.7rem; color: var(--c); font-weight: 800; }
+.stream-row .lbl { display: block; color: var(--muted); font-size: .9rem; margin-bottom: .15rem; }
+
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem; counter-reset: s; }
+.steps li { counter-increment: s; position: relative; padding-top: 3rem; }
+.steps li::before { content: counter(s); position: absolute; top: 0; left: 0; width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; background: var(--brand); color: var(--brand-ink); }
+.steps li::after { content: ""; position: absolute; top: 1.1rem; left: 2.6rem; right: -1rem; height: 2px; background: var(--line); }
+.steps li:last-child::after { display: none; }
+.steps h3 { font-size: 1.15rem; margin-bottom: .4rem; }
+.steps p { font-size: .97rem; color: var(--muted); margin: 0; }
+.guard { margin-top: 2rem; background: var(--wash); border-radius: 14px; padding: 1.1rem 1.4rem; max-width: 720px; }
+
+.band h2 + .two, .band h2 + .principles { margin-top: 2.4rem; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+.two h3 { font-size: 1.5rem; margin-bottom: .6rem; }
+.two p { color: var(--muted); }
+
+.principles { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem 3rem; }
+.principles h3 { font-size: 1.35rem; margin-bottom: .35rem; }
+.principles p { color: var(--muted); margin: 0; }
+
+.site-foot { border-top: 1px solid var(--line); padding: 2.2rem 0 3rem; color: var(--muted); font-size: .95rem; }
+.site-foot p { max-width: 70ch; }
+
+@media (max-width: 860px) {
+  .stream-row { grid-template-columns: 1fr; gap: .4rem; }
+  .steps { grid-template-columns: 1fr; gap: 1.6rem; }
+  .steps li { padding: 0 0 0 3.2rem; }
+  .steps li::after { top: 2.4rem; left: 1.05rem; right: auto; width: 2px; height: calc(100% + .2rem); }
+  .two, .principles { grid-template-columns: 1fr; gap: 2rem; }
+  .answer dl { grid-template-columns: 1fr; gap: .1rem; }
+  .answer dd { margin-bottom: .7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#try">Skip to the assistant</a>
+
+<div class="wrap">
+  <header class="site-head">
+    <a class="brand" href="#top">EcoSort Campus</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="#streams">The four streams</a>
+      <a href="#how">How it works</a>
+      <a href="#responsible">Responsible AI</a>
+      <button class="theme-btn" id="theme" type="button" aria-label="Switch colour theme">Dark mode</button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" id="try" aria-labelledby="h-hero">
+      <div class="hero-grid">
+      <div class="hero-copy">
+      <h1 id="h-hero">Which bin does it go in?</h1>
+      <p class="lede">Type any item. EcoSort answers from India's four-stream waste rules, shows where the answer came from, and tells you when it is not sure.</p>
+
+      <form class="ask" id="askForm" autocomplete="off">
+        <input id="item" type="text" maxlength="200" placeholder="For example: banana peel" aria-label="Item to sort">
+        <button class="btn" type="submit">Sort it</button>
+      </form>
+      <div class="examples" id="examples"><span>Try:</span></div>
+
+      <p class="fine">Runs entirely in your browser: nothing you type is sent anywhere. Advisory only. The knowledge base is a small sample, so check your own campus and municipal rules.</p>
+      </div>
+      <div class="hero-demo">
+        <div class="bins" id="bins" aria-hidden="true"></div>
+        <div class="answer empty" id="answer" role="status" aria-live="polite">Your answer will appear here.</div>
+      </div>
+      </div>
+    </section>
+
+    <section class="band" id="streams" aria-labelledby="h-streams">
+      <h2 id="h-streams">Four streams, one rule</h2>
+      <p class="intro">The Solid Waste Management Rules, 2026 have required four-stream segregation at source since 1 April 2026. It replaced the older wet and dry split.</p>
+      <div class="streams">
+        <div class="stream-row" data-s="Wet"><h3>Wet</h3><p><span class="lbl">What goes in</span>Kitchen scraps, fruit and vegetable peels, meat, flowers</p><p><span class="lbl">Where it goes</span>Composting or bio-methanation</p></div>
+        <div class="stream-row" data-s="Dry"><h3>Dry</h3><p><span class="lbl">What goes in</span>Plastic, paper, metal, glass, wood, rubber</p><p><span class="lbl">Where it goes</span>A Material Recovery Facility for sorting and recycling</p></div>
+        <div class="stream-row" data-s="Sanitary"><h3>Sanitary</h3><p><span class="lbl">What goes in</span>Used diapers, sanitary pads, tampons, condoms</p><p><span class="lbl">Where it goes</span>Wrapped securely and stored separately</p></div>
+        <div class="stream-row" data-s="Special care"><h3>Special care</h3><p><span class="lbl">What goes in</span>Paint cans, bulbs, batteries, mercury thermometers, expired medicines</p><p><span class="lbl">Where it goes</span>Designated collection centres</p></div>
+      </div>
+    </section>
+
+    <section class="band" id="how" aria-labelledby="h-how">
+      <h2 id="h-how">How an answer is made</h2>
+      <p class="intro">EcoSort never answers from memory. Every answer is built from a passage it can point to, and three checks decide whether it answers at all.</p>
+      <ol class="steps">
+        <li><h3>You type an item</h3><p>Email addresses and phone numbers are removed before anything else happens.</p></li>
+        <li><h3>Ambiguity check</h3><p>A used tissue or a greasy pizza box depends on its condition, so EcoSort does not guess.</p></li>
+        <li><h3>Retrieval</h3><p>The closest passages in the rules and the campus guide are found (RAG).</p></li>
+        <li><h3>Confidence check</h3><p>A weak match becomes "Not sure" instead of a confident mistake.</p></li>
+        <li><h3>Answer with source</h3><p>The stream, the reason, how to dispose of it, and where that came from.</p></li>
+      </ol>
+      <p class="guard">This page runs the offline mode, which answers straight from the best passage. In the full application, an IBM Granite model writes the answer from those passages, and its stream must match the evidence or the answer becomes "Not sure".</p>
+    </section>
+
+    <section class="band" aria-labelledby="h-built">
+      <h2 id="h-built">Built with IBM Bob and IBM Granite</h2>
+      <div class="two">
+        <div><h3>Bob builds it</h3><p>IBM Bob is the AI development partner used while building the project: planning the architecture, drafting code and tests, writing documentation and reviewing for security. A person reads and approves every change.</p></div>
+        <div><h3>Granite answers</h3><p>At run time, the full application uses IBM Granite models through watsonx.ai or Ollama, with retrieval-augmented generation so answers stay tied to the rules. The source code, tests and evaluation are in the project repository.</p></div>
+      </div>
+    </section>
+
+    <section class="band" id="responsible" aria-labelledby="h-resp">
+      <h2 id="h-resp">Responsible by design</h2>
+      <div class="principles">
+        <div><h3>Fairness</h3><p>Plain language, no login and no cost. The knowledge base is meant to be extended with items from many regions and households, then tested.</p></div>
+        <div><h3>Transparency</h3><p>Every answer shows its stream, reason and source. Open "How EcoSort got this" to see the passages and the match score.</p></div>
+        <div><h3>Ethics</h3><p>Advice only. It never monitors or penalises people, and hazardous or unclear cases go to a person at the campus sustainability desk.</p></div>
+        <div><h3>Privacy</h3><p>No accounts, no names. Personal details typed by mistake are stripped, and feedback stays on your device as two counters.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <p>EcoSort Campus supports SDG 12, Responsible Consumption and Production, with SDG 11 and SDG 13 as secondary goals. It is a student project for the 1M1B, IBM SkillsBuild and AICTE AI for Sustainability Virtual Internship.</p>
+    <p>[Your Name], [College Name]</p>
+  </footer>
+</div>
+
+<script>
+/* EcoSort engine (JavaScript port of the Python pipeline, offline mode).
+ * Mirrors ecosort/retriever.py, privacy.py and pipeline.py so the static website
+ * behaves like the Python app. Keep the two in sync (scripts/check_engine.js tests parity).
+ */
+(function (root) {
+  "use strict";
+
+  const STOP = new Set(["a","an","the","of","in","on","to","my","this","that","is","it","and","or","with",
+    "used","old","broken","empty","waste","item","throw","thrown","dispose","where","what","how","do","does",
+    "i","we","put","into","bin","some","piece","from","canteen","hostel","campus","small","big","large",
+    "dirty","clean","half","eaten"]);
+
+  function tokenize(text) {
+    text = String(text).toLowerCase().replace(/\bcan (i|we|you)\b/g, " ");
+    const out = [];
+    for (let t of (text.match(/[a-z]+/g) || [])) {
+      if (STOP.has(t)) continue;
+      if (t.endsWith("ies") && t.length > 4) t = t.slice(0, -3) + "y";
+      else if (t.endsWith("s") && !t.endsWith("ss") && t.length > 3) t = t.slice(0, -1);
+      out.push(t);
+    }
+    return out;
+  }
+
+  function features(tokens) {           // unigrams + bigrams, like sklearn ngram_range=(1,2)
+    const f = tokens.slice();
+    for (let i = 0; i < tokens.length - 1; i++) f.push(tokens[i] + " " + tokens[i + 1]);
+    return f;
+  }
+
+  function sanitize(text) {
+    text = String(text || "")
+      .replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, " ")
+      .replace(/(?<!\d)(?:\+?\d[\s-]?){10,13}(?!\d)/g, " ")
+      .replace(/\s+/g, " ").trim();
+    return text.slice(0, 200);
+  }
+
+  class Retriever {
+    constructor(chunks) {
+      this.chunks = chunks;
+      const docs = chunks.map(c => features(tokenize([c.title, ...c.keywords, c.why].join(" "))));
+      const df = new Map();
+      for (const d of docs) for (const f of new Set(d)) df.set(f, (df.get(f) || 0) + 1);
+      const n = docs.length;
+      this.idf = new Map();
+      for (const [f, c] of df) this.idf.set(f, Math.log((1 + n) / (1 + c)) + 1);
+      this.vecs = docs.map(d => this._vector(d));
+    }
+    _vector(feats) {
+      const tf = new Map();
+      for (const f of feats) if (this.idf.has(f)) tf.set(f, (tf.get(f) || 0) + 1);
+      const v = new Map(); let norm = 0;
+      for (const [f, c] of tf) { const w = (1 + Math.log(c)) * this.idf.get(f); v.set(f, w); norm += w * w; }
+      norm = Math.sqrt(norm) || 1;
+      for (const [f, w] of v) v.set(f, w / norm);
+      return v;
+    }
+    search(query, k = 3) {
+      const toks = tokenize(query);
+      if (!toks.length) return [];
+      const q = this._vector(features(toks));
+      const scored = this.vecs.map((v, i) => {
+        let s = 0; for (const [f, w] of q) if (v.has(f)) s += w * v.get(f);
+        return { chunk: this.chunks[i], score: s, i };
+      }).filter(x => x.score > 0);
+      scored.sort((a, b) => b.score - a.score || a.i - b.i);
+      return scored.slice(0, k);
+    }
+  }
+
+  class EcoSort {
+    constructor(kb, opts = {}) {
+      this.retriever = new Retriever(kb.chunks);
+      this.ambiguous = (kb.ambiguous || []).map(s => s.toLowerCase());
+      this.minScore = opts.minScore ?? 0.15;
+      this.topK = opts.topK ?? 3;
+    }
+    _notSure(item, why, score = 0, evidence = []) {
+      return { item, stream: "Not sure", confident: false, score,
+        why: why || "I could not find this item in my sources, so I will not guess.",
+        dispose: "Please ask the campus sustainability desk.", source: "-", evidence };
+    }
+    ask(query) {
+      const item = sanitize(query);
+      if (!item) return this._notSure(item, "Please type the name of an item.");
+      const low = item.toLowerCase();
+      if (this.ambiguous.some(p => low.includes(p)))
+        return this._notSure(item, "Where this goes depends on its condition (for example soiled or plastic-lined) or on local rules, so I will not guess.");
+      const hits = this.retriever.search(item, this.topK);
+      const evidence = hits.map(h => ({ title: h.chunk.title, stream: h.chunk.stream, score: h.score }));
+      if (!hits.length || hits[0].score < this.minScore)
+        return this._notSure(item, null, hits.length ? hits[0].score : 0, evidence);
+      const top = hits[0].chunk;
+      return { item, stream: top.stream, confident: true, score: Math.round(hits[0].score * 1000) / 1000,
+        why: top.why, dispose: top.dispose, source: top.source, evidence };
+    }
+  }
+
+  const api = { tokenize, sanitize, Retriever, EcoSort };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  else root.EcoSortEngine = api;
+})(typeof window !== "undefined" ? window : globalThis);
+
+</script>
+<script>
+(function () {
+  "use strict";
+  const KB = {"ambiguous": ["tissue", "napkin", "face mask", "mask", "pizza box", "paper cup", "greasy", "oily", "soiled"], "chunks": [{"id": "rule-wet", "stream": "Wet", "title": "Wet waste (definition)", "keywords": ["wet waste", "kitchen waste", "food waste", "vegetable", "fruit", "peel", "meat", "flower", "biodegradable", "organic"], "why": "Wet waste is biodegradable kitchen and garden waste such as food scraps, fruit and vegetable peels, meat and flowers.", "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.", "source": "SWM Rules, 2026 (MoEFCC)"}, {"id": "rule-dry", "stream": "Dry", "title": "Dry waste (definition)", "keywords": ["dry waste", "plastic", "paper", "metal", "glass", "wood", "rubber", "recyclable", "multilayer packaging"], "why": "Dry waste covers recyclable materials such as plastic, paper, metal, glass, wood and rubber.", "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.", "source": "SWM Rules, 2026 (MoEFCC)"}, {"id": "rule-sanitary", "stream": "Sanitary", "title": "Sanitary waste (definition)", "keywords": ["sanitary waste", "diaper", "sanitary pad", "sanitary towel", "tampon", "condom", "hygiene"], "why": "Sanitary waste is used personal-hygiene items such as diapers, sanitary pads, tampons and condoms.", "dispose": "Wrap it securely and store it separately from other waste.", "source": "SWM Rules, 2026 (MoEFCC)"}, {"id": "rule-special", "stream": "Special care", "title": "Special care waste (definition)", "keywords": ["special care", "hazardous", "bulb", "battery", "medicine", "paint", "thermometer", "mercury"], "why": "Special care waste is household hazardous waste such as paint cans, bulbs, mercury thermometers, batteries and expired medicines.", "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.", "source": "SWM Rules, 2026 (MoEFCC)"}, {"id": "wet-tea", "stream": "Wet", "title": "Tea bags, tea leaves and coffee grounds", "keywords": ["tea bag", "tea leaves", "tea", "coffee grounds", "coffee"], "why": "Tea and coffee residue is organic kitchen waste.", "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "wet-food", "stream": "Wet", "title": "Leftover cooked food", "keywords": ["leftover food", "rice", "curry", "roti", "chapati", "dal", "meal", "canteen food", "cooked food"], "why": "Cooked and leftover food is organic kitchen waste.", "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "wet-peel", "stream": "Wet", "title": "Fruit and vegetable peels", "keywords": ["banana peel", "fruit peel", "vegetable peel", "orange peel", "potato peel", "apple core", "banana", "mango", "vegetable", "fruit"], "why": "Fruit and vegetable peels are organic kitchen waste.", "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "wet-egg", "stream": "Wet", "title": "Egg shells and meat scraps", "keywords": ["egg shell", "eggshell", "chicken bones", "meat", "fish", "bones"], "why": "Egg shells and meat scraps are organic kitchen waste.", "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "wet-flower", "stream": "Wet", "title": "Flowers and garlands", "keywords": ["flower", "garland", "puja flowers", "petals"], "why": "Flowers and garlands are organic waste.", "dispose": "Put it in the wet waste bin so it can be composted or processed through bio-methanation.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "dry-bottle", "stream": "Dry", "title": "Plastic bottles", "keywords": ["plastic bottle", "water bottle", "cold drink bottle", "pet bottle", "bottle"], "why": "Plastic is a dry recyclable material.", "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "dry-wrapper", "stream": "Dry", "title": "Plastic wrappers and bags", "keywords": ["wrapper", "chips packet", "biscuit wrapper", "carry bag", "plastic bag", "polythene", "plastic cover", "packet"], "why": "Plastic wrappers and bags are dry waste.", "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "dry-paper", "stream": "Dry", "title": "Paper and notebooks", "keywords": ["paper", "newspaper", "notebook", "printout", "magazine", "book", "exam sheets"], "why": "Paper is a dry recyclable material.", "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "dry-cardboard", "stream": "Dry", "title": "Cardboard boxes", "keywords": ["cardboard", "carton", "box", "delivery box", "parcel box"], "why": "Cardboard is paper-based and counts as dry waste.", "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "dry-glass", "stream": "Dry", "title": "Glass bottles and jars", "keywords": ["glass bottle", "glass", "jar", "broken glass bottle"], "why": "Glass is a dry recyclable material.", "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "dry-metal", "stream": "Dry", "title": "Metal cans, tins and foil", "keywords": ["metal can", "tin can", "tin", "soft drink can", "aluminium foil", "foil", "steel", "spoon"], "why": "Metal is a dry recyclable material.", "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "dry-multilayer", "stream": "Dry", "title": "Juice cartons and multilayer packaging", "keywords": ["tetra pack", "juice box", "juice carton", "multilayer packaging", "milk carton"], "why": "Multilayer packaging is listed under dry waste.", "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "dry-disposable", "stream": "Dry", "title": "Disposable plates, cups and cutlery", "keywords": ["disposable plate", "plastic spoon", "plastic cup", "straw", "disposable cutlery", "thermocol"], "why": "Disposable plastic items are dry waste.", "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "dry-cloth", "stream": "Dry", "title": "Old clothes, rubber and wood", "keywords": ["cloth", "clothes", "towel", "slipper", "rubber", "wooden stick", "ice cream stick", "pencil", "wood"], "why": "Rubber and wood are listed under dry waste, and textiles are dry, non-organic waste.", "dispose": "Keep it clean and dry in the dry waste bin. It goes to a Material Recovery Facility for sorting and recycling.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "san-pad", "stream": "Sanitary", "title": "Sanitary pads and tampons", "keywords": ["sanitary pad", "sanitary napkin", "sanitary towel", "tampon", "period product", "menstrual pad"], "why": "Sanitary pads and tampons are sanitary waste.", "dispose": "Wrap it securely and store it separately from other waste.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "san-diaper", "stream": "Sanitary", "title": "Diapers", "keywords": ["diaper", "baby diaper", "adult diaper"], "why": "Diapers are sanitary waste.", "dispose": "Wrap it securely and store it separately from other waste.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "san-condom", "stream": "Sanitary", "title": "Condoms", "keywords": ["condom", "contraceptive"], "why": "Condoms are sanitary waste.", "dispose": "Wrap it securely and store it separately from other waste.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "spc-bulb", "stream": "Special care", "title": "Tube lights, CFLs and bulbs", "keywords": ["tube light", "tubelight", "cfl", "bulb", "led bulb", "lamp", "fluorescent"], "why": "Bulbs and tube lights are special care (household hazardous) waste.", "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "spc-battery", "stream": "Special care", "title": "Batteries", "keywords": ["battery", "batteries", "aa battery"], "why": "Batteries are special care (household hazardous) waste.", "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "spc-medicine", "stream": "Special care", "title": "Expired medicines", "keywords": ["expired medicine", "medicine", "tablet", "tablets", "syrup", "strip", "drugs"], "why": "Expired medicines are special care (household hazardous) waste.", "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "spc-paint", "stream": "Special care", "title": "Paint cans and tins", "keywords": ["paint", "paint can", "paint tin", "varnish", "thinner"], "why": "Paint cans are special care (household hazardous) waste.", "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.", "source": "Campus bin guide (sample - edit for your campus)"}, {"id": "spc-thermo", "stream": "Special care", "title": "Mercury thermometers", "keywords": ["thermometer", "mercury thermometer", "mercury"], "why": "Mercury thermometers are special care (household hazardous) waste.", "dispose": "Do not mix it with wet or dry waste. Hand it over at a designated special care waste collection point.", "source": "Campus bin guide (sample - edit for your campus)"}]};
+  const STREAMS = ["Wet", "Dry", "Sanitary", "Special care"];
+  const bot = new EcoSortEngine.EcoSort(KB);
+
+  const $ = id => document.getElementById(id);
+  const binsEl = $("bins"), answerEl = $("answer"), input = $("item");
+
+  /* Safe storage: works in private windows and when storage is blocked. */
+  const store = {
+    get(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* ignore */ } }
+  };
+
+  /* Theme toggle */
+  const root = document.documentElement, themeBtn = $("theme");
+  function isDark() {
+    const t = root.getAttribute("data-theme");
+    return t ? t === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function paintTheme() { themeBtn.textContent = isDark() ? "Light mode" : "Dark mode"; }
+  const saved = store.get("ecosort_theme");
+  if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+  paintTheme();
+  themeBtn.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    root.setAttribute("data-theme", next); store.set("ecosort_theme", next); paintTheme();
+  });
+
+  /* Four bins */
+  const SVG = `<svg viewBox="0 0 120 150" role="img" focusable="false">
+    <path class="body" d="M20 40 H100 L94 138 Q93.5 146 86 146 H34 Q26.5 146 26 138 Z"/>
+    <line class="slat" x1="47" y1="58" x2="49" y2="128"/><line class="slat" x1="60" y1="58" x2="60" y2="128"/><line class="slat" x1="73" y1="58" x2="71" y2="128"/>
+    <circle class="drop" cx="60" cy="30" r="8"/>
+    <g class="lid"><rect x="16" y="28" width="88" height="12" rx="5"/><rect x="48" y="21" width="24" height="9" rx="4.5"/></g>
+  </svg>`;
+  STREAMS.forEach(s => {
+    const d = document.createElement("div");
+    d.className = "bin"; d.dataset.s = s;
+    d.innerHTML = SVG + '<div class="bin-name"></div>';
+    d.querySelector(".bin-name").textContent = s;
+    binsEl.appendChild(d);
+  });
+  function openBin(stream) {
+    binsEl.querySelectorAll(".bin").forEach(b => b.classList.remove("is-open"));
+    if (!stream) return;
+    const b = binsEl.querySelector('.bin[data-s="' + stream + '"]');
+    if (b) { void b.offsetWidth; b.classList.add("is-open"); }
+  }
+
+  /* Example chips */
+  ["banana peel", "tube light", "used tea bag", "sanitary pad", "old phone charger"].forEach(t => {
+    const c = document.createElement("button");
+    c.type = "button"; c.className = "chip"; c.textContent = t;
+    c.addEventListener("click", () => { input.value = t; run(t); });
+    $("examples").appendChild(c);
+  });
+
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+
+  function run(q) {
+    const a = bot.ask(q);
+    openBin(a.confident ? a.stream : null);
+    answerEl.className = "answer";
+    answerEl.replaceChildren();
+    if (a.confident) answerEl.dataset.s = a.stream; else delete answerEl.dataset.s;
+
+    if (a.item) answerEl.appendChild(el("p", "echo", "For \u201C" + a.item + "\u201D"));
+    answerEl.appendChild(el("p", "badge", a.stream));
+
+    const dl = el("dl");
+    [["Why", a.why], ["How to dispose", a.dispose], ["Source", a.source]].forEach(([k, v]) => {
+      dl.appendChild(el("dt", null, k)); dl.appendChild(el("dd", null, v));
+    });
+    answerEl.appendChild(dl);
+
+    const det = el("details");
+    det.appendChild(el("summary", null, "How EcoSort got this"));
+    const ul = el("ul");
+    if (a.evidence.length) {
+      a.evidence.forEach(e => ul.appendChild(el("li", null, e.title + " (" + e.stream + "), match score " + e.score.toFixed(2))));
+    } else {
+      ul.appendChild(el("li", null, "No passage in the knowledge base matched this item."));
+    }
+    det.appendChild(ul);
+    det.appendChild(el("p", null, "An answer needs a match score of at least " + bot.minScore.toFixed(2) + "."));
+    answerEl.appendChild(det);
+
+    const fb = el("div", "fb");
+    fb.appendChild(el("span", null, "Was this useful?"));
+    [["helpful", "Yes"], ["not_helpful", "No"]].forEach(([kind, label]) => {
+      const b = el("button", null, label); b.type = "button";
+      b.addEventListener("click", () => {
+        let c = {};
+        try { c = JSON.parse(store.get("ecosort_feedback") || "{}"); } catch (e) { c = {}; }
+        c[kind] = (c[kind] || 0) + 1; store.set("ecosort_feedback", JSON.stringify(c));
+        fb.replaceChildren(el("span", null, "Thanks. Saved as a counter on this device only."));
+      });
+      fb.appendChild(b);
+    });
+    answerEl.appendChild(fb);
+  }
+
+  $("askForm").addEventListener("submit", e => { e.preventDefault(); run(input.value); });
+})();
+</script>
+</body>
+</html>
