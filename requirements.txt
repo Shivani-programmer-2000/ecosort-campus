@@ -1,7 +1,0 @@
-scikit-learn>=1.3
-streamlit>=1.42
-requests>=2.31
-python-dotenv>=1.0
-# IBM Granite on watsonx.ai. Optional at run time (the app falls back to offline mode without keys),
-# but listed here so Streamlit Community Cloud installs it.
-ibm-watsonx-ai>=1.0
